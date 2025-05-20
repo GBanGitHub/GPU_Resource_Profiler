@@ -1,0 +1,48 @@
+{
+  "gpu_stats": [
+    [
+      {
+        "timestamp": "2024-06-01T12:00:00",
+        "device_id": 0,
+        "name": "NVIDIA RTX 4090",
+        "utilization": 67,
+        "memory_used": 16384,
+        "temperature": 62,
+        "power_usage": 320,
+        "processes": [
+          {
+            "pid": 4321,
+            "name": "python.exe",
+            "memory_used": 12000,
+            "username": "user1"
+          },
+          {
+            "pid": 5678,
+            "name": "train.exe",
+            "memory_used": 4000,
+            "username": "user2"
+          }
+        ]
+      }
+    ],
+    [
+      {
+        "timestamp": "2024-06-01T12:01:00",
+        "device_id": 0,
+        "name": "NVIDIA RTX 4090",
+        "utilization": 72,
+        "memory_used": 17000,
+        "temperature": 64,
+        "power_usage": 340,
+        "processes": [
+          {
+            "pid": 4321,
+            "name": "python.exe",
+            "memory_used": 13000,
+            "username": "user1"
+          }
+        ]
+      }
+    ]
+  ]
+} 

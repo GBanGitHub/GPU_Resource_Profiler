@@ -1,0 +1,40 @@
+# GPU Resource Profiler Configuration
+
+# Profiling settings
+profiling:
+  sampling_interval: 1.0  # seconds
+  output_dir: profiles
+  log_level: "INFO"
+
+# Alert thresholds
+alerts:
+  gpu:
+    utilization:
+      warning: 90  # percentage
+      critical: 95
+    memory:
+      warning: 85  # percentage
+      critical: 90
+    temperature:
+      warning: 80  # celsius
+      critical: 85
+    power:
+      warning: 90  # percentage of TDP
+      critical: 95
+
+# Export settings
+export:
+  format: "json"  # json or csv
+  compression: false
+  prometheus:
+    enabled: false
+    port: 9090
+    path: "/metrics"
+
+# Dashboard settings
+dashboard:
+  enabled: true
+  port: 8050
+  host: "localhost"
+  refresh_interval: 1.0  # seconds
+  theme: "dark" 
