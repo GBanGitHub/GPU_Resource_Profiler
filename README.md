@@ -1,29 +1,35 @@
 # GPU Resource Profiler
 
 ## Overview
-The GPU Resource Profiler is a tool designed to monitor, record, and visualize GPU usage statistics during AI training jobs or other GPU-intensive tasks. It helps users understand how their GPU resources are being utilized, identify bottlenecks, and optimize performance. The project includes a real-time dashboard for visualizing GPU metrics and supports exporting profiling data for further analysis.
+The GPU Resource Profiler is a Python-based tool designed to help users monitor and analyze GPU usage during AI training jobs or other GPU-intensive workloads. It provides a structured way to collect, store, and visualize GPU statistics, making it easier to identify performance bottlenecks, optimize resource allocation, and troubleshoot issues.
 
 ## Features
-- **Real-time GPU monitoring**: Tracks utilization, memory usage, temperature, power, and active processes.
-- **Data export**: Saves profiling data in JSON format for later review or analysis.
-- **Interactive dashboard**: Visualizes GPU metrics and process information using a web-based interface.
-- **Customizable alerts**: Warns when GPU metrics exceed configurable thresholds.
-- **Support for multiple GPUs**: Monitors all available GPUs in the system.
+- **Comprehensive GPU Monitoring**: Collects data on GPU utilization, memory usage, temperature, power consumption, and active processes.
+- **Historical Data Storage**: Saves time-stamped GPU statistics in JSON files for later analysis.
+- **Profile Management**: Supports multiple profiling sessions, allowing users to compare GPU usage across different jobs or time periods.
+- **Customizable Alerts**: Users can set thresholds for utilization, memory, temperature, and power to receive warnings when limits are exceeded.
+- **Extensible and Modular**: Built with modular Python scripts for easy customization and extension.
 
 ## How It Works
-1. **Profiling**: The profiler collects GPU statistics at regular intervals (configurable in `config/config.yaml`). It uses libraries like `pynvml` and `psutil` to gather data such as utilization, memory usage, temperature, power draw, and running processes.
-2. **Data Storage**: Collected data is saved as JSON files in the `profiles/` directory. Each file contains time-stamped samples of GPU stats.
-3. **Dashboard**: The dashboard (built with Dash and Plotly) reads these profile files and displays interactive graphs and tables. Users can select different profiles and time ranges to analyze GPU usage patterns.
+1. **Data Collection**: The profiler uses NVIDIA's NVML library (via `pynvml`) and the `psutil` library to gather real-time statistics from all available GPUs. This includes metrics such as:
+   - GPU utilization percentage
+   - Memory used (in MB)
+   - Temperature (in Celsius)
+   - Power usage (in Watts)
+   - List of active processes using the GPU
+2. **Sampling and Storage**: At a user-defined interval (set in `config/config.yaml`), the profiler samples these statistics and appends them to a structured list. After the profiling session, the data is saved as a JSON file in the `profiles/` directory. Each file represents a profiling session and contains all collected samples.
+3. **Analysis and Visualization**: The collected profile files can be loaded for analysis or visualization. The project includes scripts and a dashboard (optional) for plotting trends, comparing sessions, and examining process-level GPU usage.
 
 ## Getting Started
 ### Prerequisites
-- Python 3.8+
+- Python 3.8 or higher
 - NVIDIA GPU with drivers and NVML support (for full functionality)
+- Required Python packages (see `requirements.txt`)
 
 ### Installation
 1. **Clone the repository:**
    ```sh
-   git clone <repo-url>
+   git clone https://github.com/GBanGitHub/GPU_Resource_Profiler.git
    cd GPU_Resource_Profiler
    ```
 2. **Install dependencies:**
@@ -31,26 +37,23 @@ The GPU Resource Profiler is a tool designed to monitor, record, and visualize G
    pip install -r requirements.txt
    ```
 
-### Running the Profiler
-- (If you have a profiling script, run it to generate profile files in the `profiles/` directory.)
-- Or, add sample profile files manually for testing.
-
-### Running the Dashboard
-```sh
-python src/dashboard.py
-```
-- Open your browser and go to [http://localhost:8050](http://localhost:8050) (or the port specified in `config/config.yaml`).
-- Select a profile file from the dropdown to view GPU usage statistics.
+### Profiling Workflow
+1. **Configure Profiling:**
+   - Edit `config/config.yaml` to set the sampling interval, output directory, alert thresholds, and other options.
+2. **Run the Profiler:**
+   - Use the provided Python scripts to start a profiling session. The profiler will collect GPU stats at the specified interval and save them to a JSON file in the `profiles/` directory.
+3. **Analyze Results:**
+   - Load the generated profile files for analysis or visualization. You can use the included dashboard or write your own scripts to process the JSON data.
 
 ## File Structure
 ```
 GPU_Resource_Profiler/
 ├── config/
-│   └── config.yaml         # Configuration file for profiling and dashboard
+│   └── config.yaml         # Main configuration file
 ├── profiles/               # Directory for storing GPU profile JSON files
 │   └── profile_4090_sample.json
 ├── src/
-│   ├── dashboard.py        # Dashboard web app
+│   ├── dashboard.py        # (Optional) Dashboard web app for visualization
 │   ├── gpu.py              # GPU monitoring utilities
 │   ├── system.py           # System info utilities
 │   └── ...
@@ -60,6 +63,7 @@ GPU_Resource_Profiler/
 ```
 
 ## Example Profile File Format
+Each profile file is a JSON document containing a list of time-stamped GPU statistics. Example:
 ```json
 {
   "gpu_stats": [
@@ -81,10 +85,18 @@ GPU_Resource_Profiler/
 }
 ```
 
-## Why Use This Tool?
-- **Performance optimization**: Identify GPU bottlenecks and optimize training jobs.
-- **Resource tracking**: Monitor how different jobs or users utilize GPU resources.
-- **Troubleshooting**: Detect overheating, memory leaks, or abnormal power usage.
+## Configuration
+- **config/config.yaml**: Central configuration file for the profiler. You can set:
+  - Sampling interval (how often stats are collected)
+  - Output directory for profile files
+  - Alert thresholds for GPU metrics
+  - Export and dashboard options
+
+## Use Cases
+- **Performance Optimization**: Identify underutilized or overburdened GPUs during training jobs.
+- **Resource Tracking**: Monitor how different users or jobs consume GPU resources over time.
+- **Troubleshooting**: Detect issues like overheating, memory leaks, or abnormal power usage.
+- **Comparative Analysis**: Compare GPU usage across different sessions or hardware setups.
 
 ## License
 This project is open source and available under the MIT License. 
