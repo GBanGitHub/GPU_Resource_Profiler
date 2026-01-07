@@ -7,9 +7,9 @@ from pathlib import Path
 import logging
 from dataclasses import asdict
 
-from utils.gpu import GPUMonitor, GPUStats
-from utils.system import SystemMonitor, SystemInfo
-from utils.env import EnvironmentDetector, EnvironmentInfo
+from src.utils.gpu import GPUMonitor, GPUStats
+from src.utils.system import SystemMonitor
+from src.utils.env import EnvironmentDetector, EnvironmentInfo
 
 class GPUProfiler:
     """Main GPU profiler class that coordinates monitoring and data collection."""
