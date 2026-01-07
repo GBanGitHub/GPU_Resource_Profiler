@@ -7,6 +7,14 @@ from pathlib import Path
 import logging
 from dataclasses import asdict
 
+
+class DateTimeEncoder(json.JSONEncoder):
+    """Custom JSON encoder that handles datetime objects."""
+    def default(self, obj):
+        if isinstance(obj, datetime):
+            return obj.isoformat()
+        return super().default(obj)
+
 from src.utils.gpu import GPUMonitor, GPUStats
 from src.utils.system import SystemMonitor
 from src.utils.env import EnvironmentDetector, EnvironmentInfo
@@ -64,20 +72,20 @@ class GPUProfiler:
                 self.current_profile['environment'] = asdict(
                     self.env_detector.get_environment_info()
                 )
-            
-            # Get system info
+
+            # Get system info (returns a dict, not a dataclass)
             system_info = self.system_monitor.get_system_info()
-            self.current_profile['system_info'] = asdict(system_info)
-            
+            self.current_profile['system_info'] = system_info
+
             # Get GPU stats
             gpu_stats = self.gpu_monitor.get_all_gpu_stats()
             self.current_profile['gpu_stats'].append([
                 asdict(stat) for stat in gpu_stats
             ])
-            
+
             return {
                 'timestamp': datetime.now().isoformat(),
-                'system_info': asdict(system_info),
+                'system_info': system_info,
                 'gpu_stats': [asdict(stat) for stat in gpu_stats]
             }
         except Exception as e:
@@ -89,7 +97,7 @@ class GPUProfiler:
         try:
             output_file = self.output_dir / f"profile_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
             with open(output_file, 'w') as f:
-                json.dump(self.current_profile, f, indent=2)
+                json.dump(self.current_profile, f, indent=2, cls=DateTimeEncoder)
             self.logger.info(f"Profile saved to {output_file}")
         except Exception as e:
             self.logger.error(f"Error saving profile: {e}")

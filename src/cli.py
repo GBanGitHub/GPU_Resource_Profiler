@@ -3,6 +3,10 @@
 Unified CLI entry point for GPU Resource Profiler.
 """
 
+import warnings
+# Suppress pynvml deprecation warning before any imports
+warnings.filterwarnings('ignore', message='.*pynvml.*deprecated.*')
+
 import click
 import sys
 from pathlib import Path

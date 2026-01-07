@@ -4,6 +4,16 @@ from typing import Dict, List, Optional, Tuple, Any
 import time
 from dataclasses import dataclass
 from datetime import datetime
+import warnings
+
+# Suppress pynvml deprecation warning
+warnings.filterwarnings('ignore', message='.*pynvml.*deprecated.*')
+
+def _decode_name(name):
+    """Handle both bytes and string returns from pynvml."""
+    if isinstance(name, bytes):
+        return name.decode('utf-8')
+    return name
 
 @dataclass
 class GPUStats:
@@ -42,7 +52,7 @@ class GPUMonitor:
             handle = pynvml.nvmlDeviceGetHandleByIndex(device_id)
             
             # Get basic device info
-            name = pynvml.nvmlDeviceGetName(handle).decode('utf-8')
+            name = _decode_name(pynvml.nvmlDeviceGetName(handle))
             
             # Get utilization info
             utilization = pynvml.nvmlDeviceGetUtilizationRates(handle)
@@ -105,9 +115,9 @@ class GPUMonitor:
         """Get names of all available GPUs."""
         try:
             return [
-                pynvml.nvmlDeviceGetName(
+                _decode_name(pynvml.nvmlDeviceGetName(
                     pynvml.nvmlDeviceGetHandleByIndex(i)
-                ).decode('utf-8')
+                ))
                 for i in range(self.device_count)
             ]
         except pynvml.NVMLError as e:

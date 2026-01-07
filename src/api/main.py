@@ -4,6 +4,16 @@ from pydantic import BaseModel
 from typing import List, Dict, Optional
 import pynvml
 from datetime import datetime
+import warnings
+
+# Suppress pynvml deprecation warning
+warnings.filterwarnings('ignore', message='.*pynvml.*deprecated.*')
+
+def _decode_name(name):
+    """Handle both bytes and string returns from pynvml."""
+    if isinstance(name, bytes):
+        return name.decode('utf-8')
+    return name
 
 app = FastAPI(
     title="GPU Resource Profiler API",
@@ -66,7 +76,7 @@ async def get_gpus():
             
             gpu_info = GPUInfo(
                 id=i,
-                name=name.decode('utf-8'),
+                name=_decode_name(name),
                 temperature=temp,
                 memory_total=memory_info.total,
                 memory_used=memory_info.used,
@@ -102,7 +112,7 @@ async def get_gpu(gpu_id: int):
         
         return GPUInfo(
             id=gpu_id,
-            name=name.decode('utf-8'),
+            name=_decode_name(name),
             temperature=temp,
             memory_total=memory_info.total,
             memory_used=memory_info.used,
